@@ -1,5 +1,5 @@
 // ============================================
-// ПОРТФОЛИО РОМАНА БАГАНЦОВА — С АНИМАЦИЯМИ
+// ПОРТФОЛИО РОМАНА БАГАНЦОВА
 // ============================================
 
 // Данные портфолио (твои проекты)
@@ -54,41 +54,47 @@ const projectsData = [
     }
 ];
 
-// Данные опыта работы
-const experienceData = [
-    {
-        title: "Фронтенд-разработчик",
-        company: "Freelance",
-        period: "2023 — настоящее время",
-        description: "Разработка сайтов под ключ, вёрстка сложных интерфейсов, интеграция API, оптимизация производительности."
-    },
-    {
-        title: "Верстальщик / Junior Frontend",
-        company: "Студия 'WebCraft'",
-        period: "2022 — 2023",
-        description: "Адаптивная вёрстка лендингов и интернет-магазинов, работа с Figma, код-ревью, командная разработка."
-    }
-];
-
-// Навыки
+// Навыки (только GitHub из фреймворков)
 const skillsData = [
     "JavaScript", "TypeScript", "React", "Vue 3", 
     "Next.js", "HTML5/CSS3", "Tailwind", "SCSS", 
-    "Git", "Figma", "Node.js", "REST API"
+    "Git", "Figma", "Node.js", "REST API", "GitHub"
 ];
 
 // Текущая активная страница
 let currentPage = 'works';
 let observer = null;
 
+// ========== ПЕРЕКЛЮЧЕНИЕ ТЕМЫ ==========
+function initTheme() {
+    const toggleBtn = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('theme');
+    
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+        if (toggleBtn) toggleBtn.querySelector('.theme-toggle__icon').textContent = '☀️';
+    } else {
+        document.body.classList.remove('dark');
+        if (toggleBtn) toggleBtn.querySelector('.theme-toggle__icon').textContent = '🌙';
+    }
+    
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            const icon = toggleBtn.querySelector('.theme-toggle__icon');
+            if (icon) icon.textContent = isDark ? '☀️' : '🌙';
+        });
+    }
+}
+
 // ========== АНИМАЦИИ ==========
 
-// Анимация появления элементов при скролле
 function initScrollAnimation() {
-    // Удаляем старый observer, если есть
     if (observer) observer.disconnect();
     
-    const animatedElements = document.querySelectorAll('.project-card, .skill-tag, .contact-card, .experience-card');
+    const animatedElements = document.querySelectorAll('.project-card, .skill-tag, .contact-card');
     
     animatedElements.forEach(el => {
         el.classList.add('scroll-animate');
@@ -98,8 +104,6 @@ function initScrollAnimation() {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('scroll-visible');
-                // Можно продолжать наблюдать или отключить после появления
-                // observer.unobserve(entry.target);
             }
         });
     }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
@@ -109,8 +113,7 @@ function initScrollAnimation() {
     });
 }
 
-// Эффект печатной машинки (для секции "Обо мне")
-function typeWriterEffect(element, text, speed = 30, callback) {
+function typeWriterEffect(element, text, speed = 40) {
     let i = 0;
     element.textContent = '';
     element.style.opacity = '1';
@@ -120,56 +123,28 @@ function typeWriterEffect(element, text, speed = 30, callback) {
             element.textContent += text.charAt(i);
             i++;
             setTimeout(type, speed);
-        } else if (callback) {
-            callback();
         }
     }
     type();
 }
 
-// Анимация счётчика (для чисел)
-function animateCounter(element, start, end, duration = 1000) {
-    let startTime = null;
-    
-    function updateCounter(currentTime) {
-        if (!startTime) startTime = currentTime;
-        const progress = Math.min((currentTime - startTime) / duration, 1);
-        const value = Math.floor(start + (end - start) * easeOutCubic(progress));
-        element.textContent = value;
-        
-        if (progress < 1) {
-            requestAnimationFrame(updateCounter);
-        }
-    }
-    
-    requestAnimationFrame(updateCounter);
-}
-
-function easeOutCubic(x) {
-    return 1 - Math.pow(1 - x, 3);
-}
-
-// Анимация при наведении на карточки (дополнительно)
 function addCardHoverEffects() {
     const cards = document.querySelectorAll('.project-card');
     cards.forEach(card => {
-        card.addEventListener('mouseenter', (e) => {
+        card.addEventListener('mouseenter', () => {
             const preview = card.querySelector('.project-card__preview');
             if (preview) {
                 preview.style.transform = 'scale(1.02)';
                 preview.style.transition = 'transform 0.3s ease';
             }
         });
-        card.addEventListener('mouseleave', (e) => {
+        card.addEventListener('mouseleave', () => {
             const preview = card.querySelector('.project-card__preview');
-            if (preview) {
-                preview.style.transform = 'scale(1)';
-            }
+            if (preview) preview.style.transform = 'scale(1)';
         });
     });
 }
 
-// Плавный вход контента
 function animateContentIn(container) {
     container.style.opacity = '0';
     container.style.transform = 'translateY(15px)';
@@ -183,27 +158,11 @@ function animateContentIn(container) {
 
 // ========== РЕНДЕР СТРАНИЦ ==========
 
-// Рендер страницы "Работы"
 function renderWorksPage() {
     return `
         <div class="works-page fade-in">
             <h1 style="font-size: 2.2rem; margin-bottom: 10px; font-weight: 800;">Мои проекты</h1>
             <p style="color: var(--text-secondary); margin-bottom: 40px; font-size: 1rem;">Реальные сайты и приложения, которые я создал</p>
-            
-            <div class="stats-row" style="display: flex; gap: 30px; justify-content: center; margin-bottom: 50px; flex-wrap: wrap;">
-                <div class="stat-card" style="background: var(--bg-elevated); border-radius: 16px; padding: 20px 32px; text-align: center; border: 1px solid var(--border);">
-                    <div class="stat-number" id="projectsCount" style="font-size: 2.5rem; font-weight: 800; color: var(--accent);">0</div>
-                    <div class="stat-label" style="color: var(--text-secondary); font-size: 0.85rem;">завершённых проектов</div>
-                </div>
-                <div class="stat-card" style="background: var(--bg-elevated); border-radius: 16px; padding: 20px 32px; text-align: center; border: 1px solid var(--border);">
-                    <div class="stat-number" id="techCount" style="font-size: 2.5rem; font-weight: 800; color: var(--accent);">0</div>
-                    <div class="stat-label" style="color: var(--text-secondary); font-size: 0.85rem;">технологий в работе</div>
-                </div>
-                <div class="stat-card" style="background: var(--bg-elevated); border-radius: 16px; padding: 20px 32px; text-align: center; border: 1px solid var(--border);">
-                    <div class="stat-number" id="expYears" style="font-size: 2.5rem; font-weight: 800; color: var(--accent);">0</div>
-                    <div class="stat-label" style="color: var(--text-secondary); font-size: 0.85rem;">лет в разработке</div>
-                </div>
-            </div>
             
             <div class="projects-grid">
                 ${projectsData.map((project, index) => `
@@ -226,7 +185,6 @@ function renderWorksPage() {
     `;
 }
 
-// Рендер страницы "Обо мне"
 function renderAboutPage() {
     return `
         <div class="about-section fade-in">
@@ -236,7 +194,7 @@ function renderAboutPage() {
             </div>
             
             <div style="margin-bottom: 36px;">
-                <p style="margin-bottom: 24px; line-height: 1.6;">Специализируюсь на фронтенде, но могу и бэкенд. Люблю чистый код, продуманный дизайн и решать реальные задачи пользователей. Постоянно учусь новому и слежу за трендами в веб-разработке.</p>
+                <p style="margin-bottom: 24px; line-height: 1.6;">Специализируюсь на фронтенде, создаю современные и быстрые веб-приложения. Люблю чистый код, продуманный дизайн и решать реальные задачи пользователей. Постоянно учусь новому и слежу за трендами в веб-разработке.</p>
                 <p style="color: var(--text-secondary);">🚀 Главный принцип: <strong style="color: var(--accent);">"Код должен работать и радовать глаз"</strong></p>
             </div>
             
@@ -245,15 +203,6 @@ function renderAboutPage() {
                 ${skillsData.map((skill, index) => `<span class="skill-tag" data-delay="${index * 0.03}">${skill}</span>`).join('')}
             </div>
             
-            <h3 style="margin: 40px 0 20px; font-size: 1.3rem;">💼 Опыт работы</h3>
-            ${experienceData.map(exp => `
-                <div class="experience-card">
-                    <strong>${exp.title}</strong> <span class="date">${exp.period}</span>
-                    <div style="color: var(--accent); font-size: 0.85rem; margin-top: 4px;">${exp.company}</div>
-                    <p>${exp.description}</p>
-                </div>
-            `).join('')}
-            
             <div class="accent-block">
                 <p style="margin: 0; font-size: 1rem;">✨ <strong>Открыт к сотрудничеству</strong> — пиши, если нужен классный сайт или помощь с проектом! ✨</p>
             </div>
@@ -261,44 +210,30 @@ function renderAboutPage() {
     `;
 }
 
-// Рендер страницы "Контакты"
 function renderContactsPage() {
     return `
         <div class="contacts-section fade-in">
             <h1>Связаться со мной</h1>
             <p style="color: var(--text-secondary); margin-top: 12px; margin-bottom: 20px;">Всегда на связи — выберите удобный способ</p>
             
-            <div class="social-links" style="display: flex; justify-content: center; gap: 20px; margin: 30px 0;">
-                <a href="#" class="social-icon" id="githubSocial" style="background: var(--bg-elevated); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; text-decoration: none; transition: all 0.2s; border: 1px solid var(--border);">🐙</a>
-                <a href="#" class="social-icon" id="telegramSocial" style="background: var(--bg-elevated); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; text-decoration: none; transition: all 0.2s; border: 1px solid var(--border);">💬</a>
-                <a href="#" class="social-icon" id="emailSocial" style="background: var(--bg-elevated); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; text-decoration: none; transition: all 0.2s; border: 1px solid var(--border);">📧</a>
-            </div>
-            
             <div class="contacts-grid">
-                <a href="mailto:roman@example.com" class="contact-card" id="emailCard">
+                <a href="mailto:roma_bagantsov@vk.com" class="contact-card" id="emailCard">
                     <div class="contact-card__icon">📧</div>
                     <div class="contact-card__info">
                         <h3>Email</h3>
-                        <p>roman@example.com</p>
+                        <p>roma_bagantsov@vk.com</p>
                     </div>
                 </a>
                 <a href="#" class="contact-card" id="telegramCard">
                     <div class="contact-card__icon">💬</div>
                     <div class="contact-card__info">
                         <h3>Telegram</h3>
-                        <p>@romabagantsov</p>
-                    </div>
-                </a>
-                <a href="#" class="contact-card" id="githubCard">
-                    <div class="contact-card__icon">🐙</div>
-                    <div class="contact-card__info">
-                        <h3>GitHub</h3>
-                        <p>/romabagantsov-creator</p>
+                        <p>@RomanBagantsov</p>
                     </div>
                 </a>
             </div>
             
-            <div style="margin-top: 40px; padding: 20px; background: var(--accent-soft); border-radius: 16px; border: 1px solid rgba(255,51,51,0.2);">
+            <div style="margin-top: 40px; padding: 20px; background: var(--accent-soft); border-radius: 16px; border: 1px solid var(--accent);">
                 <p style="margin: 0; font-size: 0.9rem;">📌 Обычно отвечаю в течение нескольких часов. Буду рад новым знакомствам и проектам!</p>
             </div>
         </div>
@@ -340,19 +275,6 @@ function loadPage(page) {
         attachProjectHandlers();
         attachContactHandlers();
         
-        // Анимация счётчиков на странице работ
-        if (page === 'works') {
-            setTimeout(() => {
-                const projectsCountEl = document.getElementById('projectsCount');
-                const techCountEl = document.getElementById('techCount');
-                const expYearsEl = document.getElementById('expYears');
-                if (projectsCountEl) animateCounter(projectsCountEl, 0, projectsData.length, 1200);
-                if (techCountEl) animateCounter(techCountEl, 0, skillsData.length, 1200);
-                if (expYearsEl) animateCounter(expYearsEl, 0, 4, 1200);
-            }, 200);
-        }
-        
-        // Эффект печатной машинки на странице "Обо мне"
         if (page === 'about') {
             setTimeout(() => {
                 const typeEl = document.getElementById('typewriter-text');
@@ -362,12 +284,10 @@ function loadPage(page) {
             }, 300);
         }
         
-        // Инициализируем анимацию скролла после рендера
         setTimeout(() => {
             initScrollAnimation();
             addCardHoverEffects();
             
-            // Добавляем стили для анимации, если их ещё нет
             if (!document.getElementById('animation-styles')) {
                 const styleSheet = document.createElement('style');
                 styleSheet.id = 'animation-styles';
@@ -381,7 +301,7 @@ function loadPage(page) {
                         opacity: 1 !important;
                         transform: translateY(0) !important;
                     }
-                    .project-card, .skill-tag, .contact-card, .experience-card {
+                    .project-card, .skill-tag, .contact-card {
                         transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.2s, transform 0.2s;
                     }
                     @keyframes wave {
@@ -402,21 +322,6 @@ function loadPage(page) {
                             transform: translateY(0);
                         }
                     }
-                    .social-icon:hover {
-                        transform: translateY(-3px);
-                        border-color: var(--accent) !important;
-                        background: var(--accent-soft) !important;
-                    }
-                    .contact-card {
-                        transition: transform 0.25s, border-color 0.2s, box-shadow 0.2s !important;
-                    }
-                    .stat-card {
-                        transition: transform 0.2s, box-shadow 0.2s;
-                    }
-                    .stat-card:hover {
-                        transform: translateY(-3px);
-                        box-shadow: var(--shadow-md);
-                    }
                 `;
                 document.head.appendChild(styleSheet);
             }
@@ -426,7 +331,6 @@ function loadPage(page) {
     }, 200);
 }
 
-// Обновление активной ссылки
 function updateActiveNavLink(page) {
     const links = document.querySelectorAll('.nav__link');
     links.forEach(link => {
@@ -439,7 +343,6 @@ function updateActiveNavLink(page) {
     });
 }
 
-// Обработчики для проектов
 function attachProjectHandlers() {
     const projectLinks = document.querySelectorAll('.project-card__link');
     projectLinks.forEach(link => {
@@ -450,47 +353,20 @@ function attachProjectHandlers() {
             }
         });
     });
-    
-    // Добавляем анимацию при наведении на карточки
-    const cards = document.querySelectorAll('.project-card');
-    cards.forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            const preview = card.querySelector('.project-card__preview');
-            if (preview) {
-                preview.style.transform = 'scale(1.02)';
-                preview.style.transition = 'transform 0.3s ease';
-            }
-        });
-        card.addEventListener('mouseleave', () => {
-            const preview = card.querySelector('.project-card__preview');
-            if (preview) preview.style.transform = 'scale(1)';
-        });
-    });
 }
 
-// Обработчики для контактов
 function attachContactHandlers() {
-    const handlers = [
-        { id: 'telegramCard', msg: '📱 Напиши мне в Telegram: @romabagantsov' },
-        { id: 'githubCard', msg: '🐙 Мой GitHub: github.com/romabagantsov-creator' },
-        { id: 'emailCard', msg: '📧 Отправь письмо на roman@example.com' },
-        { id: 'telegramSocial', msg: '📱 Напиши мне в Telegram: @romabagantsov' },
-        { id: 'githubSocial', msg: '🐙 Мой GitHub: github.com/romabagantsov-creator' },
-        { id: 'emailSocial', msg: '📧 Отправь письмо на roman@example.com' }
-    ];
+    const telegramCard = document.getElementById('telegramCard');
+    if (telegramCard) {
+        telegramCard.addEventListener('click', (e) => {
+            e.preventDefault();
+            showGlowNotification('📱 Напиши мне в Telegram: @RomanBagantsov');
+        });
+    }
     
-    handlers.forEach(({ id, msg }) => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.addEventListener('click', (e) => {
-                e.preventDefault();
-                showGlowNotification(msg);
-            });
-        }
-    });
+    // emailCard оставляем как настоящую ссылку (href уже есть)
 }
 
-// Красивое уведомление
 function showGlowNotification(message) {
     const existingToast = document.querySelector('.glow-toast');
     if (existingToast) existingToast.remove();
@@ -511,7 +387,7 @@ function showGlowNotification(message) {
         font-size: 0.85rem;
         font-weight: 600;
         z-index: 1000;
-        box-shadow: 0 0 20px rgba(255, 51, 51, 0.3);
+        box-shadow: 0 0 20px rgba(204, 0, 0, 0.3);
         backdrop-filter: blur(10px);
         white-space: nowrap;
         max-width: 90%;
@@ -521,9 +397,8 @@ function showGlowNotification(message) {
         letter-spacing: 0.3px;
     `;
     
-    // Добавляем анимацию
-    const style = document.createElement('style');
     if (!document.querySelector('#toast-keyframes')) {
+        const style = document.createElement('style');
         style.id = 'toast-keyframes';
         style.textContent = `
             @keyframes slideUpGlow {
@@ -550,7 +425,6 @@ function showGlowNotification(message) {
     }, 2800);
 }
 
-// Навигация
 function initNavigation() {
     const navLinks = document.querySelectorAll('.nav__link');
     navLinks.forEach(link => {
@@ -566,7 +440,6 @@ function initNavigation() {
     });
 }
 
-// Анимация при загрузке страницы
 function initPageLoadAnimation() {
     document.body.style.opacity = '0';
     document.body.style.transition = 'opacity 0.5s ease';
@@ -577,6 +450,7 @@ function initPageLoadAnimation() {
 
 // ========== ЗАПУСК ==========
 document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
     initPageLoadAnimation();
     initNavigation();
     loadPage('works');
