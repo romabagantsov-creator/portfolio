@@ -335,6 +335,7 @@ function renderAboutPage() {
         </div>
     `;
 }
+
 function renderContactsPage() {
     return `
         <div class="contacts-section fade-in">
