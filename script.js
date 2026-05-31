@@ -241,29 +241,7 @@ function initContactIconsAnimation() {
     });
 }
 
-// 10. Счётчик с анимацией (для будущих обновлений)
-function animateNumber(element, start, end, duration = 1000) {
-    let startTime = null;
-    
-    function easeOutCubic(x) {
-        return 1 - Math.pow(1 - x, 3);
-    }
-    
-    function update(currentTime) {
-        if (!startTime) startTime = currentTime;
-        const progress = Math.min((currentTime - startTime) / duration, 1);
-        const value = Math.floor(start + (end - start) * easeOutCubic(progress));
-        element.textContent = value;
-        
-        if (progress < 1) {
-            requestAnimationFrame(update);
-        }
-    }
-    
-    requestAnimationFrame(update);
-}
-
-// 11. Всплывающие уведомления (улучшенные)
+// 10. Всплывающие уведомления (улучшенные)
 function showGlowNotification(message) {
     const existingToast = document.querySelector('.glow-toast');
     if (existingToast) existingToast.remove();
@@ -310,7 +288,7 @@ function renderWorksPage() {
     return `
         <div class="works-page fade-in">
             <h1 style="font-size: 2.2rem; margin-bottom: 10px; font-weight: 800;">Мои проекты</h1>
-            <p style="color: var(--text-secondary); margin-bottom: 40px; font-size: 1rem;">Наши творения:)</p>
+            <p style="color: var(--text-secondary); margin-bottom: 40px; font-size: 1rem;">Портфолио моих проектов</p>
             
             <div class="projects-grid">
                 ${projectsData.map((project, index) => `
