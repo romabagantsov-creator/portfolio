@@ -314,13 +314,13 @@ function renderWorksPage() {
 function renderAboutPage() {
     return `
         <div class="about-section fade-in">
-            <h1>Привет, я Роман Баганцов <span class="wave-hand">👋</span></h1>
+            <h1>Привет, Роман Баганцов <span class="wave-hand">👋</span></h1>
             <div class="lead">
                 <span id="typewriter-text"></span>
             </div>
             
             <div style="margin-bottom: 36px;">
-                <p style="margin-bottom: 24px; line-height: 1.6;">Специализируюсь на фронтенде, создаю современные и быстрые веб-приложения. Люблю чистый код, продуманный дизайн и решать реальные задачи пользователей. Постоянно учусь новому и слежу за трендами в веб-разработке.</p>
+                <p style="margin-bottom: 24px; line-height: 1.6;">Веб-разработчик, создаю современные и быстрые веб-приложения. В работе ценю чистый код, продуманный дизайн и решение реальных задач пользователей. Постоянно учусь новому и слежу за трендами.</p>
                 <p style="color: var(--text-secondary);">🚀 Главный принцип: <strong style="color: var(--accent);">"Код должен работать и радовать глаз"</strong></p>
             </div>
             
