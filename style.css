@@ -361,21 +361,11 @@ body.dark .project-card:hover {
     text-align: center;
 }
 
-.contacts-section h1 {
-    font-size: 2.2rem;
-    margin-bottom: 14px;
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--text-primary) 35%, var(--accent) 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-}
-
 .contacts-grid {
     display: flex;
     flex-direction: column;
     gap: 18px;
-    margin: 48px 0;
+    margin: 0 0 30px 0;
 }
 
 .contact-card {
@@ -389,6 +379,7 @@ body.dark .project-card:hover {
     transition: all 0.25s;
     text-decoration: none;
     color: inherit;
+    text-align: left;
 }
 
 .contact-card:hover {
@@ -400,6 +391,7 @@ body.dark .project-card:hover {
 
 .contact-card__icon {
     font-size: 32px;
+    flex-shrink: 0;
 }
 
 .contact-card__info h3 {
@@ -412,6 +404,7 @@ body.dark .project-card:hover {
 .contact-card__info p {
     color: var(--text-muted);
     font-size: 0.85rem;
+    margin: 0;
 }
 
 /* Footer */
