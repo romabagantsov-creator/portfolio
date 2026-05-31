@@ -1,8 +1,8 @@
 // ============================================
-// ПОРТФОЛИО РОМАНА БАГАНЦОВА
+// ПОРТФОЛИО РОМАНА БАГАНЦОВА — МАКСИМУМ АНИМАЦИЙ
 // ============================================
 
-// Данные портфолио (твои проекты)
+// Данные портфолио
 const projectsData = [
     {
         id: 1,
@@ -54,14 +54,12 @@ const projectsData = [
     }
 ];
 
-// Навыки (только GitHub из фреймворков)
 const skillsData = [
     "JavaScript", "TypeScript", "React", "Vue 3", 
     "Next.js", "HTML5/CSS3", "Tailwind", "SCSS", 
     "Git", "Figma", "Node.js", "REST API", "GitHub"
 ];
 
-// Текущая активная страница
 let currentPage = 'works';
 let observer = null;
 
@@ -85,75 +83,225 @@ function initTheme() {
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
             const icon = toggleBtn.querySelector('.theme-toggle__icon');
             if (icon) icon.textContent = isDark ? '☀️' : '🌙';
+            
+            // Анимация кнопки
+            toggleBtn.style.transform = 'scale(0.9)';
+            setTimeout(() => { toggleBtn.style.transform = 'scale(1)'; }, 150);
         });
     }
 }
 
-// ========== АНИМАЦИИ ==========
+// ========== НОВЫЕ АНИМАЦИИ ==========
 
-function initScrollAnimation() {
+// 1. Плавное появление элементов с задержкой
+function animateSequential() {
+    const elements = document.querySelectorAll('.project-card, .skill-tag, .contact-card');
+    elements.forEach((el, index) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        setTimeout(() => {
+            el.style.transition = 'all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1)';
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+        }, index * 80);
+    });
+}
+
+// 2. 3D-эффект при движении мыши (только на карточках)
+function init3DCards() {
+    const cards = document.querySelectorAll('.project-card');
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = (y - centerY) / 20;
+            const rotateY = (centerX - x) / 20;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)';
+            setTimeout(() => {
+                card.style.transition = 'transform 0.3s ease';
+            }, 100);
+        });
+        
+        card.addEventListener('mouseenter', () => {
+            card.style.transition = 'all 0.1s ease';
+        });
+    });
+}
+
+// 3. Парящая анимация (лёгкое покачивание)
+function addFloatingAnimation() {
+    const cards = document.querySelectorAll('.project-card');
+    cards.forEach((card, index) => {
+        card.style.animation = `float ${3 + index * 0.2}s ease-in-out infinite`;
+        card.style.animationDelay = `${index * 0.2}s`;
+    });
+}
+
+// 4. Glitch-эффект для заголовков
+function initGlitchEffect() {
+    const titles = document.querySelectorAll('h1, h2, .logo__text');
+    titles.forEach(title => {
+        title.addEventListener('mouseenter', () => {
+            title.style.animation = 'glitch 0.3s ease-in-out';
+            setTimeout(() => { title.style.animation = ''; }, 300);
+        });
+    });
+}
+
+// 5. Анимация появления при скролле (с разных сторон)
+function initScrollReveal() {
     if (observer) observer.disconnect();
     
-    const animatedElements = document.querySelectorAll('.project-card, .skill-tag, .contact-card');
+    const revealElements = document.querySelectorAll('.project-card, .skill-tag, .contact-card, .accent-block');
     
-    animatedElements.forEach(el => {
-        el.classList.add('scroll-animate');
+    revealElements.forEach(el => {
+        // Случайное направление появления
+        const direction = Math.random() > 0.5 ? 'left' : 'right';
+        el.classList.add('reveal-' + direction);
+        el.style.opacity = '0';
     });
     
     observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('scroll-visible');
+                entry.target.style.transition = 'all 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.2)';
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateX(0)';
+                observer.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+    }, { threshold: 0.1 });
     
-    document.querySelectorAll('.scroll-animate').forEach(el => {
-        observer.observe(el);
-    });
+    revealElements.forEach(el => observer.observe(el));
 }
 
-function typeWriterEffect(element, text, speed = 40) {
+// 6. Эффект печатной машинки с курсором
+function typeWriterWithCursor(element, text, speed = 40) {
     let i = 0;
-    element.textContent = '';
+    element.innerHTML = '';
     element.style.opacity = '1';
+    
+    // Добавляем курсор
+    element.style.borderRight = `2px solid var(--accent)`;
+    element.style.animation = 'cursorBlink 0.7s infinite';
     
     function type() {
         if (i < text.length) {
-            element.textContent += text.charAt(i);
+            element.innerHTML += text.charAt(i) === ' ' ? '&nbsp;' : text.charAt(i);
             i++;
             setTimeout(type, speed);
+        } else {
+            // Убираем курсор после печати
+            element.style.borderRight = 'none';
         }
     }
     type();
 }
 
-function addCardHoverEffects() {
-    const cards = document.querySelectorAll('.project-card');
-    cards.forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            const preview = card.querySelector('.project-card__preview');
-            if (preview) {
-                preview.style.transform = 'scale(1.02)';
-                preview.style.transition = 'transform 0.3s ease';
-            }
-        });
-        card.addEventListener('mouseleave', () => {
-            const preview = card.querySelector('.project-card__preview');
-            if (preview) preview.style.transform = 'scale(1)';
+// 7. Анимированный фон (след за мышью)
+function initAnimatedBackground() {
+    document.addEventListener('mousemove', (e) => {
+        const x = e.clientX / window.innerWidth;
+        const y = e.clientY / window.innerHeight;
+        
+        document.body.style.backgroundPosition = `${x * 100}% ${y * 100}%`;
+    });
+}
+
+// 8. Пульсация для кнопок "Подробнее"
+function addPulseAnimation() {
+    const buttons = document.querySelectorAll('.project-card__link');
+    buttons.forEach(btn => {
+        btn.addEventListener('mouseenter', () => {
+            btn.style.animation = 'pulse 0.5s ease';
+            setTimeout(() => { btn.style.animation = ''; }, 500);
         });
     });
 }
 
-function animateContentIn(container) {
-    container.style.opacity = '0';
-    container.style.transform = 'translateY(15px)';
-    container.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+// 9. Анимация для иконок контактов
+function initContactIconsAnimation() {
+    const icons = document.querySelectorAll('.contact-card__icon');
+    icons.forEach(icon => {
+        icon.addEventListener('mouseenter', () => {
+            icon.style.transform = 'scale(1.2) rotate(5deg)';
+            icon.style.transition = 'transform 0.2s ease';
+        });
+        icon.addEventListener('mouseleave', () => {
+            icon.style.transform = 'scale(1) rotate(0deg)';
+        });
+    });
+}
+
+// 10. Счётчик с анимацией (для будущих обновлений)
+function animateNumber(element, start, end, duration = 1000) {
+    let startTime = null;
+    
+    function easeOutCubic(x) {
+        return 1 - Math.pow(1 - x, 3);
+    }
+    
+    function update(currentTime) {
+        if (!startTime) startTime = currentTime;
+        const progress = Math.min((currentTime - startTime) / duration, 1);
+        const value = Math.floor(start + (end - start) * easeOutCubic(progress));
+        element.textContent = value;
+        
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        }
+    }
+    
+    requestAnimationFrame(update);
+}
+
+// 11. Всплывающие уведомления (улучшенные)
+function showGlowNotification(message) {
+    const existingToast = document.querySelector('.glow-toast');
+    if (existingToast) existingToast.remove();
+    
+    const toast = document.createElement('div');
+    toast.className = 'glow-toast';
+    toast.textContent = message;
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--bg-elevated);
+        color: var(--accent);
+        border: 1px solid var(--accent);
+        padding: 12px 28px;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        z-index: 1000;
+        box-shadow: 0 0 20px rgba(204, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        white-space: nowrap;
+        max-width: 90%;
+        white-space: normal;
+        text-align: center;
+        animation: slideUpGlow 0.3s ease;
+        letter-spacing: 0.3px;
+    `;
+    
+    document.body.appendChild(toast);
     
     setTimeout(() => {
-        container.style.opacity = '1';
-        container.style.transform = 'translateY(0)';
-    }, 50);
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(20px)';
+        toast.style.transition = 'all 0.25s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 2800);
 }
 
 // ========== РЕНДЕР СТРАНИЦ ==========
@@ -188,7 +336,7 @@ function renderWorksPage() {
 function renderAboutPage() {
     return `
         <div class="about-section fade-in">
-            <h1>Привет, я Роман Баганцов <span style="display: inline-block; animation: wave 1s infinite;">👋</span></h1>
+            <h1>Привет, я Роман Баганцов <span class="wave-hand">👋</span></h1>
             <div class="lead">
                 <span id="typewriter-text"></span>
             </div>
@@ -200,7 +348,7 @@ function renderAboutPage() {
             
             <h3 style="margin: 40px 0 20px; font-size: 1.3rem;">🛠️ Технологии и инструменты</h3>
             <div class="skill-list">
-                ${skillsData.map((skill, index) => `<span class="skill-tag" data-delay="${index * 0.03}">${skill}</span>`).join('')}
+                ${skillsData.map((skill) => `<span class="skill-tag">${skill}</span>`).join('')}
             </div>
             
             <div class="accent-block">
@@ -218,7 +366,7 @@ function renderContactsPage() {
             
             <div class="contacts-grid">
                 <a href="mailto:roma_bagantsov@vk.com" class="contact-card" id="emailCard">
-                    <div class="contact-card__icon">📧</div>
+                    <div class="contact-card__icon bounce-icon">📧</div>
                     <div class="contact-card__info">
                         <h3>Email</h3>
                         <p>roma_bagantsov@vk.com</p>
@@ -226,7 +374,7 @@ function renderContactsPage() {
                 </a>
                 
                 <a href="#" class="contact-card" id="telegramCard">
-                    <div class="contact-card__icon">💬</div>
+                    <div class="contact-card__icon bounce-icon">💬</div>
                     <div class="contact-card__info">
                         <h3>Telegram</h3>
                         <p>@RomanBagantsov</p>
@@ -234,7 +382,7 @@ function renderContactsPage() {
                 </a>
             </div>
             
-            <div style="margin-top: 48px; padding: 20px; background: var(--accent-soft); border-radius: 16px; border: 1px solid var(--accent);">
+            <div class="accent-block" style="margin-top: 48px;">
                 <p style="margin: 0; font-size: 0.9rem;">📌 Обычно отвечаю в течение нескольких часов. Буду рад новым знакомствам и проектам!</p>
             </div>
         </div>
@@ -268,7 +416,7 @@ function loadPage(page) {
         
         if (contentDiv) {
             contentDiv.innerHTML = html;
-            animateContentIn(contentDiv);
+            contentDiv.style.opacity = '1';
         }
         if (loader) loader.style.display = 'none';
         
@@ -276,52 +424,108 @@ function loadPage(page) {
         attachProjectHandlers();
         attachContactHandlers();
         
-        if (page === 'about') {
-            setTimeout(() => {
+        // ЗАПУСК ВСЕХ АНИМАЦИЙ
+        setTimeout(() => {
+            animateSequential();
+            init3DCards();
+            initScrollReveal();
+            initGlitchEffect();
+            addPulseAnimation();
+            initContactIconsAnimation();
+            
+            if (page === 'about') {
                 const typeEl = document.getElementById('typewriter-text');
                 if (typeEl) {
-                    typeWriterEffect(typeEl, "Веб-разработчик, создаю современные и быстрые сайты.", 40);
+                    typeWriterWithCursor(typeEl, "Веб-разработчик, создаю современные и быстрые сайты.", 40);
                 }
-            }, 300);
-        }
-        
-        setTimeout(() => {
-            initScrollAnimation();
-            addCardHoverEffects();
+            }
             
+            // Добавляем анимации в CSS
             if (!document.getElementById('animation-styles')) {
                 const styleSheet = document.createElement('style');
                 styleSheet.id = 'animation-styles';
                 styleSheet.textContent = `
-                    .scroll-animate {
-                        opacity: 0;
-                        transform: translateY(25px);
-                        transition: opacity 0.5s ease, transform 0.5s ease;
+                    @keyframes float {
+                        0%, 100% { transform: translateY(0px); }
+                        50% { transform: translateY(-8px); }
                     }
-                    .scroll-visible {
-                        opacity: 1 !important;
-                        transform: translateY(0) !important;
+                    
+                    @keyframes glitch {
+                        0% { transform: skew(0deg); opacity: 1; }
+                        20% { transform: skew(2deg); opacity: 0.8; }
+                        40% { transform: skew(-2deg); opacity: 0.9; }
+                        60% { transform: skew(1deg); opacity: 1; }
+                        100% { transform: skew(0deg); opacity: 1; }
                     }
-                    .project-card, .skill-tag, .contact-card {
-                        transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.2s, transform 0.2s;
+                    
+                    @keyframes pulse {
+                        0% { transform: scale(1); }
+                        50% { transform: scale(1.05); text-shadow: 0 0 5px rgba(204,0,0,0.5); }
+                        100% { transform: scale(1); }
                     }
-                    @keyframes wave {
+                    
+                    @keyframes cursorBlink {
+                        0%, 100% { border-color: var(--accent); }
+                        50% { border-color: transparent; }
+                    }
+                    
+                    @keyframes bounceIcon {
+                        0%, 100% { transform: translateY(0); }
+                        50% { transform: translateY(-5px); }
+                    }
+                    
+                    .reveal-left {
+                        transform: translateX(-50px);
+                        transition: all 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+                    }
+                    
+                    .reveal-right {
+                        transform: translateX(50px);
+                        transition: all 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+                    }
+                    
+                    .bounce-icon {
+                        display: inline-block;
+                        transition: transform 0.2s ease;
+                    }
+                    
+                    .bounce-icon:hover {
+                        animation: bounceIcon 0.5s ease;
+                    }
+                    
+                    .wave-hand {
+                        display: inline-block;
+                        animation: waveHand 1s ease-in-out infinite;
+                        transform-origin: 70% 70%;
+                    }
+                    
+                    @keyframes waveHand {
                         0%, 100% { transform: rotate(0deg); }
                         25% { transform: rotate(15deg); }
                         75% { transform: rotate(-10deg); }
                     }
-                    .fade-in {
-                        animation: fadeInUp 0.5s ease forwards;
-                    }
-                    @keyframes fadeInUp {
+                    
+                    @keyframes slideUpGlow {
                         from {
                             opacity: 0;
-                            transform: translateY(20px);
+                            transform: translateX(-50%) translateY(20px);
                         }
                         to {
                             opacity: 1;
-                            transform: translateY(0);
+                            transform: translateX(-50%) translateY(0);
                         }
+                    }
+                    
+                    .project-card {
+                        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.2s;
+                    }
+                    
+                    .skill-tag, .contact-card {
+                        transition: all 0.3s ease;
+                    }
+                    
+                    .skill-tag:hover {
+                        transform: translateY(-3px) scale(1.02);
                     }
                 `;
                 document.head.appendChild(styleSheet);
@@ -364,66 +568,6 @@ function attachContactHandlers() {
             showGlowNotification('📱 Напиши мне в Telegram: @RomanBagantsov');
         });
     }
-    
-    // emailCard оставляем как настоящую ссылку (href уже есть)
-}
-
-function showGlowNotification(message) {
-    const existingToast = document.querySelector('.glow-toast');
-    if (existingToast) existingToast.remove();
-    
-    const toast = document.createElement('div');
-    toast.className = 'glow-toast';
-    toast.textContent = message;
-    toast.style.cssText = `
-        position: fixed;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: var(--bg-elevated);
-        color: var(--accent);
-        border: 1px solid var(--accent);
-        padding: 12px 28px;
-        border-radius: 50px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        z-index: 1000;
-        box-shadow: 0 0 20px rgba(204, 0, 0, 0.3);
-        backdrop-filter: blur(10px);
-        white-space: nowrap;
-        max-width: 90%;
-        white-space: normal;
-        text-align: center;
-        animation: slideUpGlow 0.3s ease;
-        letter-spacing: 0.3px;
-    `;
-    
-    if (!document.querySelector('#toast-keyframes')) {
-        const style = document.createElement('style');
-        style.id = 'toast-keyframes';
-        style.textContent = `
-            @keyframes slideUpGlow {
-                from {
-                    opacity: 0;
-                    transform: translateX(-50%) translateY(20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateX(-50%) translateY(0);
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-    
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateX(-50%) translateY(20px)';
-        toast.style.transition = 'all 0.25s ease';
-        setTimeout(() => toast.remove(), 300);
-    }, 2800);
 }
 
 function initNavigation() {
@@ -441,12 +585,13 @@ function initNavigation() {
     });
 }
 
+// Анимация загрузки страницы
 function initPageLoadAnimation() {
     document.body.style.opacity = '0';
-    document.body.style.transition = 'opacity 0.5s ease';
+    document.body.style.transition = 'opacity 0.8s ease';
     setTimeout(() => {
         document.body.style.opacity = '1';
-    }, 50);
+    }, 100);
 }
 
 // ========== ЗАПУСК ==========
