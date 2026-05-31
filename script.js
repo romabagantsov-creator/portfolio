@@ -314,7 +314,7 @@ function renderWorksPage() {
 function renderAboutPage() {
     return `
         <div class="about-section fade-in">
-            <h1>Привет, Роман Баганцов <span class="wave-hand">👋</span></h1>
+            <h1>О себе <span class="wave-hand">👋</span></h1>
             <div class="lead">
                 <span id="typewriter-text"></span>
             </div>
@@ -335,7 +335,6 @@ function renderAboutPage() {
         </div>
     `;
 }
-
 function renderContactsPage() {
     return `
         <div class="contacts-section fade-in">
