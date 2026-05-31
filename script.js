@@ -214,7 +214,7 @@ function renderContactsPage() {
     return `
         <div class="contacts-section fade-in">
             <h1>Связаться со мной</h1>
-            <p style="color: var(--text-secondary); margin-top: 12px; margin-bottom: 20px;">Всегда на связи — выберите удобный способ</p>
+            <p style="color: var(--text-secondary); margin-top: 12px; margin-bottom: 40px;">Всегда на связи — выберите удобный способ</p>
             
             <div class="contacts-grid">
                 <a href="mailto:roma_bagantsov@vk.com" class="contact-card" id="emailCard">
@@ -224,6 +224,7 @@ function renderContactsPage() {
                         <p>roma_bagantsov@vk.com</p>
                     </div>
                 </a>
+                
                 <a href="#" class="contact-card" id="telegramCard">
                     <div class="contact-card__icon">💬</div>
                     <div class="contact-card__info">
@@ -233,7 +234,7 @@ function renderContactsPage() {
                 </a>
             </div>
             
-            <div style="margin-top: 40px; padding: 20px; background: var(--accent-soft); border-radius: 16px; border: 1px solid var(--accent);">
+            <div style="margin-top: 48px; padding: 20px; background: var(--accent-soft); border-radius: 16px; border: 1px solid var(--accent);">
                 <p style="margin: 0; font-size: 0.9rem;">📌 Обычно отвечаю в течение нескольких часов. Буду рад новым знакомствам и проектам!</p>
             </div>
         </div>
