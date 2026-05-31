@@ -8,7 +8,6 @@ const projectsData = [
         id: 1,
         title: "Bright — IT компания",
         description: "Современный корпоративный лендинг для IT-компании с анимациями, формой связи и тёмной темой.",
-        tech: ["React", "Framer Motion", "EmailJS"],
         link: "https://romabagantsov-creator.github.io/bright-company/",
         icon: "🏢"
     },
@@ -16,7 +15,6 @@ const projectsData = [
         id: 2,
         title: "GoodsFlow — маркетплейс",
         description: "Каталог товаров с фильтрацией по категориям, поиском, корзиной и сохранением в LocalStorage.",
-        tech: ["Vue 3", "Pinia", "Tailwind"],
         link: "https://romabagantsov-creator.github.io/goodsflow/",
         icon: "🛒"
     },
@@ -24,7 +22,6 @@ const projectsData = [
         id: 3,
         title: "TravelBlog — блог о путешествиях",
         description: "Блог с постами о путешествиях, комментариями, счётчиком просмотров и удобной навигацией.",
-        tech: ["Next.js", "MDX", "MongoDB"],
         link: "https://romabagantsov-creator.github.io/travel-blog/",
         icon: "✈️"
     },
@@ -32,7 +29,6 @@ const projectsData = [
         id: 4,
         title: "FitTrack — фитнес-трекер",
         description: "Трекер тренировок с графиками прогресса, добавлением занятий и статистикой.",
-        tech: ["TypeScript", "Chart.js", "LocalStorage"],
         link: "https://romabagantsov-creator.github.io/fitness-tracker/",
         icon: "💪"
     },
@@ -40,7 +36,6 @@ const projectsData = [
         id: 5,
         title: "PhotoPortfolio — фотограф",
         description: "Портфолио фотографа с галереей, фильтрацией, Lightbox и формой обратной связи.",
-        tech: ["HTML/CSS", "JavaScript", "Lightbox"],
         link: "https://romabagantsov-creator.github.io/photo-portfolio/",
         icon: "📷"
     },
@@ -48,7 +43,6 @@ const projectsData = [
         id: 6,
         title: "CRM Dashboard",
         description: "Система управления клиентами и задачами с графиками, CRUD операциями и LocalStorage.",
-        tech: ["React", "Redux Toolkit", "Firebase"],
         link: "https://romabagantsov-creator.github.io/crm-dashboard/",
         icon: "📊"
     }
@@ -210,9 +204,6 @@ function renderWorksPage() {
                         <div class="project-card__content">
                             <h3 class="project-card__title">${project.title}</h3>
                             <p class="project-card__desc">${project.description}</p>
-                            <div class="project-card__tech">
-                                ${project.tech.map(tech => `<span class="tech-badge">${tech}</span>`).join('')}
-                            </div>
                             <a href="${project.link}" class="project-card__link" target="_blank" data-project-id="${project.id}">
                                 Посмотреть проект → 
                             </a>
