@@ -310,7 +310,7 @@ function renderWorksPage() {
     return `
         <div class="works-page fade-in">
             <h1 style="font-size: 2.2rem; margin-bottom: 10px; font-weight: 800;">Мои проекты</h1>
-            <p style="color: var(--text-secondary); margin-bottom: 40px; font-size: 1rem;">Реальные сайты и приложения, которые я создал</p>
+            <p style="color: var(--text-secondary); margin-bottom: 40px; font-size: 1rem;">Наши творения:)</p>
             
             <div class="projects-grid">
                 ${projectsData.map((project, index) => `
